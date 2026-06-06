@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>À propos — SK'Luxury</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <style>
+    .about-hero {
+      min-height: 70vh; display: flex; align-items: center;
+      padding: 10rem 4rem 6rem; position: relative; overflow: hidden;
+    }
+    .about-hero-bg {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 30% 60%, rgba(201,169,110,0.05) 0%, transparent 60%);
+    }
+    .about-hero-content { position: relative; z-index: 1; max-width: 650px; }
+    .about-hero-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 300; font-style: italic;
+      line-height: 1.3; margin-bottom: 2rem; color: rgba(249,245,239,0.85);
+    }
+    .about-hero-attr { font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); }
+    .manifesto-section {
+      display: grid; grid-template-columns: 1fr 1fr;
+      border-top: 0.5px solid var(--border);
+    }
+    .manifesto-left { padding: 7rem 5rem 7rem 4rem; border-right: 0.5px solid var(--border); }
+    .manifesto-right { padding: 7rem 4rem 7rem 5rem; }
+    .manifesto-title {
+      font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; font-weight: 300;
+      line-height: 1.2; margin-bottom: 2rem;
+    }
+    .manifesto-body { font-size: 0.72rem; letter-spacing: 0.04em; line-height: 2.3; color: rgba(249,245,239,0.45); margin-bottom: 2rem; }
+    .timeline { position: relative; padding-left: 2rem; }
+    .timeline::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 0.5px; background: var(--border); }
+    .timeline-item { position: relative; margin-bottom: 3rem; }
+    .timeline-dot {
+      position: absolute; left: -2.35rem; top: 0.3rem;
+      width: 8px; height: 8px; border-radius: 50%; background: var(--gold);
+    }
+    .timeline-year { font-size: 0.6rem; letter-spacing: 0.25em; color: var(--gold); margin-bottom: 0.4rem; }
+    .timeline-event { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 300; margin-bottom: 0.4rem; }
+    .timeline-desc { font-size: 0.65rem; letter-spacing: 0.04em; color: rgba(249,245,239,0.35); line-height: 1.8; }
+    .values-section { padding: 7rem 4rem; border-top: 0.5px solid var(--border); }
+    .values-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: var(--border); margin-top: 4rem; }
+    .value-card { background: var(--noir); padding: 3rem 2.5rem; }
+    .value-number { font-family: 'Cormorant Garamond', serif; font-size: 3rem; font-weight: 300; color: var(--gold); opacity: 0.2; line-height: 1; margin-bottom: 1.5rem; }
+    .value-title { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 300; margin-bottom: 1rem; }
+    .value-desc { font-size: 0.65rem; letter-spacing: 0.04em; line-height: 2; color: rgba(249,245,239,0.4); }
+    .team-section { padding: 7rem 4rem; border-top: 0.5px solid var(--border); background: var(--noir2); }
+    .team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3rem; margin-top: 4rem; }
+    .team-card { text-align: center; }
+    .team-avatar {
+      width: 120px; height: 120px; border-radius: 50%;
+      background: var(--noir3); border: 0.5px solid var(--border);
+      margin: 0 auto 1.5rem; display: flex; align-items: center; justify-content: center;
+      font-size: 2.5rem;
+    }
+    .team-name { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 300; margin-bottom: 0.3rem; }
+    .team-role { font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.8rem; }
+    .team-bio { font-size: 0.65rem; letter-spacing: 0.04em; line-height: 1.9; color: rgba(249,245,239,0.35); }
+    .cta-section { padding: 8rem 4rem; text-align: center; }
+    .cta-title { font-family: 'Cormorant Garamond', serif; font-size: 3rem; font-weight: 300; margin-bottom: 1.5rem; }
+    .cta-sub { font-size: 0.72rem; letter-spacing: 0.08em; color: rgba(249,245,239,0.4); margin-bottom: 3rem; }
+    @media (max-width: 768px) {
+      .about-hero { padding: 8rem 1.5rem 4rem; }
+      .manifesto-section { grid-template-columns: 1fr; }
+      .manifesto-left { border-right: none; border-bottom: 0.5px solid var(--border); padding: 4rem 1.5rem; }
+      .manifesto-right { padding: 4rem 1.5rem; }
+      .values-grid { grid-template-columns: 1fr; }
+      .team-grid { grid-template-columns: 1fr; }
+      .values-section, .team-section, .cta-section { padding: 4rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-loader" id="page-loader"><div class="loader-logo">SK'<span style="font-style:italic;color:var(--creme)">Luxury</span></div></div>
+  <nav class="nav-main" id="main-nav"></nav>
+  <div id="cart-overlay" class="cart-overlay"></div>
+  <aside id="cart-sidebar"></aside>
+  <div id="toast-container"></div>
+
+  <section class="about-hero">
+    <div class="about-hero-bg"></div>
+    <div class="about-hero-content">
+      <p class="section-eyebrow" style="margin-bottom:2rem">Notre histoire</p>
+      <div class="about-hero-quote">
+        "Nous ne vendons pas des produits. Nous gardons en vie des savoir-faire qui méritent d'exister."
+      </div>
+      <p class="about-hero-attr">— Fondatrice, SK'Luxury</p>
+    </div>
+  </section>
+
+  <div class="manifesto-section">
+    <div class="manifesto-left">
+      <p class="section-eyebrow">Notre manifeste</p>
+      <h2 class="manifesto-title">Une maison fondée<br>sur l'<em>exigence</em></h2>
+      <p class="manifesto-body">
+        SK'Luxury est née d'un refus : celui de se satisfaire de l'ordinaire. Fondée à Paris en 2018, notre maison a été construite autour d'une conviction simple — les matières et les soins que l'on choisit parlent de qui l'on est.
+      </p>
+      <p class="manifesto-body">
+        Chaque tissu dans notre catalogue a été touché, testé, évalué. Chaque formule cosmétique a été appliquée sur notre peau avant d'être proposée à la vôtre. Nous sommes nos propres premiers clients.
+      </p>
+      <p class="manifesto-body">
+        Nous croyons au commerce lent, au choix éclairé, à la relation directe entre l'artisan et le client. C'est pourquoi nous travaillons directement avec les ateliers, sans intermédiaire superflu.
+      </p>
+    </div>
+    <div class="manifesto-right">
+      <p class="section-eyebrow">Notre parcours</p>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-year">2018</div>
+          <div class="timeline-event">Fondation à Paris</div>
+          <div class="timeline-desc">Ouverture de la boutique en ligne avec 12 références tissus sélectionnées dans les ateliers lyonnais.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-year">2019</div>
+          <div class="timeline-event">Lancement des cosmétiques</div>
+          <div class="timeline-desc">Première collection de soins formulés en collaboration avec des laboratoires certifiés Ecocert.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-year">2021</div>
+          <div class="timeline-event">Expansion internationale</div>
+          <div class="timeline-desc">Nouvelles sources en Belgique, Japon et Maroc. Le catalogue passe à 80 références.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-year">2023</div>
+          <div class="timeline-event">Pop-up store Paris</div>
+          <div class="timeline-desc">Premier espace physique éphémère dans le 8e arrondissement, 3 000 visiteurs en deux semaines.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-year">2024</div>
+          <div class="timeline-event">200 références & coffrets</div>
+          <div class="timeline-desc">Lancement de la ligne Coffrets Prestige et atteinte des 200 produits au catalogue.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="values-section">
+    <div style="text-align:center;max-width:480px;margin:0 auto">
+      <p class="section-eyebrow" style="justify-content:center">Ce en quoi nous croyons</p>
+      <h2 class="section-title">Nos <em>valeurs</em></h2>
+    </div>
+    <div class="values-grid">
+      <div class="value-card">
+        <div class="value-number">I</div>
+        <h3 class="value-title">L'excellence sans compromis</h3>
+        <p class="value-desc">Chaque produit passe par une sélection rigoureuse. Nous préférons un catalogue restreint d'une qualité irréprochable à une offre abondante sans caractère.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-number">II</div>
+        <h3 class="value-title">La transparence totale</h3>
+        <p class="value-desc">Composition, origine, conditions de fabrication — nous partageons tout ce que nous savons sur chaque produit. Votre confiance se mérite par l'honnêteté.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-number">III</div>
+        <h3 class="value-title">L'artisanat vivant</h3>
+        <p class="value-desc">Nos partenaires sont des artisans, pas des usines. En les choisissant, vous participez à la préservation de savoir-faire qui prennent des décennies à maîtriser.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="team-section">
+    <div style="text-align:center;max-width:480px;margin:0 auto">
+      <p class="section-eyebrow" style="justify-content:center">L'équipe</p>
+      <h2 class="section-title">Ceux qui font <em>SK'Luxury</em></h2>
+    </div>
+    <div class="team-grid">
+      <div class="team-card">
+        <div class="team-avatar">👩</div>
+        <div class="team-name">Sofia Karim</div>
+        <div class="team-role">Fondatrice & Directrice</div>
+        <div class="team-bio">Ancienne styliste dans la haute couture parisienne, Sofia a fondé SK'Luxury pour démocratiser l'accès aux matières exceptionnelles.</div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">👨</div>
+        <div class="team-name">Luca Merani</div>
+        <div class="team-role">Directeur des achats</div>
+        <div class="team-bio">Expert textile depuis 15 ans, Luca parcourt les ateliers du monde entier pour dénicher les étoffes qui intègreront notre catalogue.</div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">👩</div>
+        <div class="team-name">Yasmine Bouchard</div>
+        <div class="team-role">Directrice cosmétiques</div>
+        <div class="team-bio">Pharmacienne et formulatrice, Yasmine supervise le développement et la sélection de chaque soin avec une rigueur scientifique absolue.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <p class="section-eyebrow" style="justify-content:center;margin-bottom:1.5rem">Rejoignez-nous</p>
+    <h2 class="cta-title">Prêt à découvrir l'exception ?</h2>
+    <p class="cta-sub">Explorez notre catalogue ou contactez-nous pour un conseil personnalisé.</p>
+    <div style="display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap">
+      <a href="boutique.html" class="btn btn-gold">Visiter la boutique</a>
+      <a href="mailto:contact@skluxury.fr" class="btn btn-outline">Nous contacter</a>
+    </div>
+  </section>
+
+  <footer id="main-footer"></footer>
+
+  <script src="../js/database.js"></script>
+  <script src="../js/app.js"></script>
+</body>
+</html>

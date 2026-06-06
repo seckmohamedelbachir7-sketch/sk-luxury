@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Boutique — SK'Luxury</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+  <div class="page-loader" id="page-loader"><div class="loader-logo">SK'<span style="font-style:italic;color:var(--creme)">Luxury</span></div></div>
+  <nav class="nav-main" id="main-nav"></nav>
+  <div id="cart-overlay" class="cart-overlay"></div>
+  <aside id="cart-sidebar"></aside>
+  <div id="toast-container"></div>
+
+  <header class="page-header">
+    <p class="page-header-eyebrow">SK'Luxury</p>
+    <h1 class="page-header-title">Notre <em>Boutique</em></h1>
+    <p class="page-header-sub">Tissus précieux, cosmétiques rares et accessoires d'exception — toute la maison en un seul endroit.</p>
+  </header>
+
+  <div class="filter-bar">
+    <div class="filter-tabs" id="filter-tabs">
+      <button class="filter-tab active" data-cat="all">Tout</button>
+      <button class="filter-tab" data-cat="tissus">Tissus</button>
+      <button class="filter-tab" data-cat="cosmetiques">Cosmétiques</button>
+      <button class="filter-tab" data-cat="accessoires">Accessoires</button>
+      <button class="filter-tab" data-cat="coffrets">Coffrets</button>
+    </div>
+    <div class="filter-right">
+      <input class="filter-search" id="search-input" type="text" placeholder="Rechercher…" />
+      <select class="filter-sort" id="sort-select">
+        <option value="default">Trier par défaut</option>
+        <option value="price-asc">Prix croissant</option>
+        <option value="price-desc">Prix décroissant</option>
+        <option value="name">Nom A–Z</option>
+      </select>
+    </div>
+  </div>
+
+  <div style="padding: 1.5rem 4rem 0; display:flex; justify-content:space-between; align-items:center;">
+    <p id="results-count" style="font-size:0.62rem;letter-spacing:0.1em;color:rgba(249,245,239,0.35)"></p>
+  </div>
+
+  <div class="product-grid" id="product-grid"></div>
+
+  <footer id="main-footer"></footer>
+
+  <script src="../js/database.js"></script>
+  <script src="../js/app.js"></script>
+  <script>
+    // Fix paths for sub-pages
+    App.goToProduct = id => { window.location.href = `produit.html?id=${id}`; };
+
+    let currentCat = 'all';
+    let currentSearch = '';
+    let currentSort = 'default';
+
+    // Read URL params
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('cat')) currentCat = params.get('cat');
+    if (params.get('q')) currentSearch = params.get('q');
+
+    function getFiltered() {
+      let products = SKLUXURY_DB.getProductsByCategory(currentCat === 'all' ? null : currentCat);
+      if (currentSearch) {
+        const q = currentSearch.toLowerCase();
+        products = products.filter(p =>
+          p.name.toLowerCase().includes(q) ||
+          p.shortDesc.toLowerCase().includes(q) ||
+          (p.tags && p.tags.some(t => t.includes(q)))
+        );
+      }
+      if (currentSort === 'price-asc') products = [...products].sort((a,b) => a.price - b.price);
+      if (currentSort === 'price-desc') products = [...products].sort((a,b) => b.price - a.price);
+      if (currentSort === 'name') products = [...products].sort((a,b) => a.name.localeCompare(b.name));
+      return products;
+    }
+
+    function render() {
+      const products = getFiltered();
+      App.renderProductGrid(products, 'product-grid');
+      document.getElementById('results-count').textContent = `${products.length} produit${products.length !== 1 ? 's' : ''}`;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Set active tab
+      document.querySelectorAll('.filter-tab').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.cat === currentCat);
+        btn.addEventListener('click', () => {
+          currentCat = btn.dataset.cat;
+          document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          render();
+        });
+      });
+
+      // Search
+      const searchInput = document.getElementById('search-input');
+      searchInput.value = currentSearch;
+      searchInput.addEventListener('input', e => { currentSearch = e.target.value; render(); });
+
+      // Sort
+      document.getElementById('sort-select').addEventListener('change', e => { currentSort = e.target.value; render(); });
+
+      render();
+    });
+  </script>
+</body>
+</html>

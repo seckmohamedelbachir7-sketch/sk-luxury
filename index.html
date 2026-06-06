@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SK'Luxury — Tissus & Cosmétiques d'Exception</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    /* Hero */
+    .hero {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+      padding: 0 4rem;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 60% 50%, rgba(201,169,110,0.06) 0%, transparent 70%),
+                  linear-gradient(to bottom, var(--noir), var(--noir2));
+    }
+    .hero-bg-lines {
+      position: absolute; inset: 0; opacity: 0.03;
+      background-image: repeating-linear-gradient(0deg, var(--creme) 0px, var(--creme) 1px, transparent 1px, transparent 80px),
+                        repeating-linear-gradient(90deg, var(--creme) 0px, var(--creme) 1px, transparent 1px, transparent 80px);
+    }
+    .hero-content { position: relative; z-index: 1; max-width: 700px; }
+    .hero-eyebrow {
+      font-size: 0.6rem; letter-spacing: 0.5em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 2rem;
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .hero-eyebrow::before { content: ''; display: block; width: 48px; height: 0.5px; background: var(--gold); }
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3rem, 6vw, 5.5rem);
+      font-weight: 300; line-height: 1.05; margin-bottom: 2rem;
+    }
+    .hero-title em { font-style: italic; color: var(--gold); }
+    .hero-desc {
+      font-size: 0.78rem; letter-spacing: 0.08em; line-height: 2;
+      color: rgba(249,245,239,0.5); max-width: 440px; margin-bottom: 3rem;
+    }
+    .hero-actions { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+    .hero-scroll {
+      position: absolute; bottom: 3rem; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+      font-size: 0.55rem; letter-spacing: 0.3em; text-transform: uppercase;
+      color: rgba(249,245,239,0.3); z-index: 1;
+    }
+    .hero-scroll-line { width: 0.5px; height: 50px; background: linear-gradient(to bottom, var(--gold), transparent); animation: scrollPulse 2s ease-in-out infinite; }
+    @keyframes scrollPulse { 0%,100%{opacity:0.3} 50%{opacity:1} }
+
+    /* Stats bar */
+    .stats-bar {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      border-top: 0.5px solid var(--border); border-bottom: 0.5px solid var(--border);
+    }
+    .stat-item {
+      padding: 2.5rem 2rem; text-align: center;
+      border-right: 0.5px solid var(--border);
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-number { font-family: 'Cormorant Garamond', serif; font-size: 3rem; font-weight: 300; color: var(--gold); line-height: 1; }
+    .stat-label { font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(249,245,239,0.4); margin-top: 0.5rem; }
+
+    /* Category section */
+    .categories-section { padding: 7rem 4rem; }
+    .categories-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5px; margin-top: 4rem; background: var(--border); }
+    .category-card {
+      background: var(--noir); padding: 3rem 2rem;
+      transition: background var(--transition); cursor: pointer;
+      display: flex; flex-direction: column; align-items: flex-start; gap: 1rem;
+      text-decoration: none; color: inherit;
+    }
+    .category-card:hover { background: var(--noir3); }
+    .category-icon { font-size: 2rem; }
+    .category-label {
+      font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 300;
+    }
+    .category-desc { font-size: 0.65rem; letter-spacing: 0.06em; color: rgba(249,245,239,0.4); line-height: 1.8; }
+    .category-arrow { font-size: 0.7rem; color: var(--gold); margin-top: auto; opacity: 0; transition: opacity var(--transition); }
+    .category-card:hover .category-arrow { opacity: 1; }
+
+    /* Featured */
+    .featured-section { padding: 7rem 4rem; }
+    .featured-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 4rem; }
+
+    /* Brand story */
+    .brand-section {
+      display: grid; grid-template-columns: 1fr 1fr;
+      border-top: 0.5px solid var(--border); border-bottom: 0.5px solid var(--border);
+    }
+    .brand-text { padding: 7rem 5rem 7rem 4rem; }
+    .brand-visual {
+      background: var(--noir3); position: relative; min-height: 500px;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    .brand-visual-inner {
+      text-align: center;
+    }
+    .brand-visual-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3rem; font-style: italic; font-weight: 300;
+      color: var(--gold); opacity: 0.35; line-height: 1.3;
+      padding: 3rem;
+    }
+    .brand-lead {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem; font-weight: 300; line-height: 1.5;
+      margin-bottom: 2rem; color: rgba(249,245,239,0.85);
+    }
+    .brand-body {
+      font-size: 0.72rem; letter-spacing: 0.05em; line-height: 2.2;
+      color: rgba(249,245,239,0.4); margin-bottom: 3rem;
+    }
+
+    /* Process */
+    .process-section { padding: 7rem 4rem; }
+    .process-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3rem; margin-top: 5rem; }
+    .process-step { position: relative; }
+    .process-num {
+      font-family: 'Cormorant Garamond', serif; font-size: 4rem; font-weight: 300;
+      color: var(--gold); opacity: 0.2; line-height: 1; margin-bottom: 1.5rem;
+    }
+    .process-title { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 300; margin-bottom: 1rem; }
+    .process-desc { font-size: 0.68rem; letter-spacing: 0.05em; line-height: 2; color: rgba(249,245,239,0.4); }
+
+    /* Newsletter */
+    .newsletter-section {
+      padding: 6rem 4rem;
+      background: var(--noir2);
+      border-top: 0.5px solid var(--border);
+      text-align: center;
+    }
+    .newsletter-title { font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; font-weight: 300; margin-bottom: 1rem; }
+    .newsletter-sub { font-size: 0.68rem; letter-spacing: 0.1em; color: rgba(249,245,239,0.4); margin-bottom: 2.5rem; }
+    .newsletter-form { display: flex; max-width: 480px; margin: 0 auto; border: 0.5px solid var(--border); }
+    .newsletter-input {
+      flex: 1; background: none; border: none;
+      padding: 1rem 1.5rem; color: var(--creme);
+      font-size: 0.68rem; letter-spacing: 0.08em; outline: none;
+    }
+    .newsletter-input::placeholder { color: rgba(249,245,239,0.25); }
+    .newsletter-btn { padding: 1rem 2rem; background: var(--gold); color: var(--noir); border: none; font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; cursor: pointer; white-space: nowrap; }
+    .newsletter-btn:hover { background: var(--gold-light); }
+
+    @media (max-width: 768px) {
+      .hero { padding: 0 1.5rem; }
+      .categories-grid { grid-template-columns: 1fr 1fr; }
+      .stats-bar { grid-template-columns: 1fr 1fr; }
+      .brand-section { grid-template-columns: 1fr; }
+      .brand-visual { display: none; }
+      .brand-text { padding: 4rem 1.5rem; }
+      .process-steps { grid-template-columns: 1fr; gap: 2rem; }
+      .featured-section, .categories-section, .process-section { padding: 4rem 1.5rem; }
+      .featured-header { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Loader -->
+  <div class="page-loader" id="page-loader">
+    <div class="loader-logo">SK'<span style="font-style:italic;color:var(--creme)">Luxury</span></div>
+  </div>
+
+  <!-- Nav -->
+  <nav class="nav-main" id="main-nav"></nav>
+
+  <!-- Cart -->
+  <div id="cart-overlay" class="cart-overlay"></div>
+  <aside id="cart-sidebar"></aside>
+  <div id="toast-container"></div>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-bg-lines"></div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">Maison parisienne fondée en 2018</p>
+      <h1 class="hero-title">
+        L'art du tissu<br>
+        & de la <em>beauté rare</em>
+      </h1>
+      <p class="hero-desc">
+        Une sélection d'étoffes précieuses et de soins d'exception, cueillis aux quatre coins du monde pour les esprits qui refusent l'ordinaire.
+      </p>
+      <div class="hero-actions">
+        <a href="pages/boutique.html" class="btn btn-gold">Découvrir la boutique</a>
+        <a href="pages/tissus.html" class="btn btn-outline">Nos tissus</a>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <div class="hero-scroll-line"></div>
+      <span>Défiler</span>
+    </div>
+  </section>
+
+  <!-- Marquee -->
+  <div class="marquee-bar">
+    <div class="marquee-track">
+      <span>Tissus d'exception</span><span>✦</span>
+      <span>Cosmétiques rares</span><span>✦</span>
+      <span>Livraison offerte dès 120€</span><span>✦</span>
+      <span>Maison parisienne</span><span>✦</span>
+      <span>Sélection exclusive</span><span>✦</span>
+      <span>Tissus d'exception</span><span>✦</span>
+      <span>Cosmétiques rares</span><span>✦</span>
+      <span>Livraison offerte dès 120€</span><span>✦</span>
+      <span>Maison parisienne</span><span>✦</span>
+      <span>Sélection exclusive</span><span>✦</span>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-bar">
+    <div class="stat-item">
+      <div class="stat-number">200+</div>
+      <div class="stat-label">Références en boutique</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">18</div>
+      <div class="stat-label">Pays d'approvisionnement</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">6</div>
+      <div class="stat-label">Années d'expertise</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">4.9</div>
+      <div class="stat-label">Note client moyenne</div>
+    </div>
+  </div>
+
+  <!-- Categories -->
+  <section class="categories-section">
+    <p class="section-eyebrow">Notre univers</p>
+    <h2 class="section-title">Quatre<br><em>collections</em></h2>
+    <div class="categories-grid">
+      <a href="pages/tissus.html" class="category-card">
+        <span class="category-icon">🧵</span>
+        <span class="category-label">Tissus</span>
+        <span class="category-desc">Étoffes sélectionnées aux quatre coins du monde, des ateliers lyonnais aux soieries japonaises.</span>
+        <span class="category-arrow">→ Explorer</span>
+      </a>
+      <a href="pages/cosmetiques.html" class="category-card">
+        <span class="category-icon">✨</span>
+        <span class="category-label">Cosmétiques</span>
+        <span class="category-desc">Soins formulés avec les plus rares des ingrédients, certifiés bio et naturels.</span>
+        <span class="category-arrow">→ Explorer</span>
+      </a>
+      <a href="pages/boutique.html?cat=accessoires" class="category-card">
+        <span class="category-icon">💎</span>
+        <span class="category-label">Accessoires</span>
+        <span class="category-desc">Accessoires de couture d'exception pour sublimer vos créations les plus précieuses.</span>
+        <span class="category-arrow">→ Explorer</span>
+      </a>
+      <a href="pages/boutique.html?cat=coffrets" class="category-card">
+        <span class="category-icon">🎁</span>
+        <span class="category-label">Coffrets</span>
+        <span class="category-desc">Collections exclusives et coffrets cadeaux, écrins noirs et or pour des présents mémorables.</span>
+        <span class="category-arrow">→ Explorer</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- Featured products -->
+  <section class="featured-section">
+    <div class="featured-header">
+      <div>
+        <p class="section-eyebrow">Sélection du moment</p>
+        <h2 class="section-title">Pièces <em>phares</em></h2>
+      </div>
+      <a href="pages/boutique.html" class="btn btn-gold-outline">Voir tout →</a>
+    </div>
+    <div class="product-grid" id="featured-grid"></div>
+  </section>
+
+  <!-- Brand story -->
+  <section class="brand-section">
+    <div class="brand-text">
+      <p class="section-eyebrow">Notre histoire</p>
+      <h2 class="section-title" style="margin-bottom:2rem">Une maison née<br>de la <em>passion</em></h2>
+      <p class="brand-lead">
+        SK'Luxury est née d'une conviction : la beauté se mérite, se choisit, se ressent.
+      </p>
+      <p class="brand-body">
+        Fondée à Paris en 2018, notre maison rassemble ce que le monde produit de plus beau en matière de textiles et de cosmétiques. Chaque pièce est sélectionnée à la main, chaque formule est évaluée selon nos standards d'exigence.<br><br>
+        Nous croyons que la qualité n'est pas un luxe réservé à quelques-uns, mais un choix accessible à ceux qui savent regarder.
+      </p>
+      <a href="pages/a-propos.html" class="btn btn-gold-outline">Notre histoire →</a>
+    </div>
+    <div class="brand-visual">
+      <div class="brand-visual-inner">
+        <div class="brand-visual-quote">"Le luxe<br>est une<br>question<br>de détail"</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Process -->
+  <section class="process-section">
+    <div style="text-align:center;max-width:500px;margin:0 auto">
+      <p class="section-eyebrow" style="justify-content:center">Notre méthode</p>
+      <h2 class="section-title">L'excellence à<br>chaque <em>étape</em></h2>
+    </div>
+    <div class="process-steps">
+      <div class="process-step">
+        <div class="process-num">01</div>
+        <h3 class="process-title">Sélection rigoureuse</h3>
+        <p class="process-desc">Chaque produit passe par une évaluation sensorielle et qualitative avant d'intégrer notre catalogue. Seul l'exceptionnel mérite votre confiance.</p>
+      </div>
+      <div class="process-step">
+        <div class="process-num">02</div>
+        <h3 class="process-title">Sourcing éthique</h3>
+        <p class="process-desc">Nous travaillons directement avec les ateliers et producteurs, garantissant traçabilité et respect des savoir-faire artisanaux ancestraux.</p>
+      </div>
+      <div class="process-step">
+        <div class="process-num">03</div>
+        <h3 class="process-title">Livraison soignée</h3>
+        <p class="process-desc">Chaque commande est emballée avec soin dans nos écrins signés SK'Luxury. La première impression est celle de l'écrin, avant même le produit.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Newsletter -->
+  <section class="newsletter-section">
+    <p class="section-eyebrow" style="justify-content:center;margin-bottom:1.5rem">Restez informé</p>
+    <h2 class="newsletter-title">L'élégance en exclusivité</h2>
+    <p class="newsletter-sub">Nouveautés, éditions limitées et offres réservées à nos abonnés.</p>
+    <div class="newsletter-form">
+      <input class="newsletter-input" type="email" placeholder="Votre adresse email" />
+      <button class="newsletter-btn" onclick="App.toast('Merci pour votre inscription !','success')">S'inscrire</button>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer id="main-footer"></footer>
+
+  <script src="js/database.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const featured = SKLUXURY_DB.getFeaturedProducts();
+      App.renderProductGrid(featured, 'featured-grid');
+    });
+  </script>
+</body>
+</html>

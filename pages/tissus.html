@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tissus — SK'Luxury</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <style>
+    .tissus-hero {
+      padding: 10rem 4rem 6rem;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
+    }
+    .tissus-visual {
+      aspect-ratio: 4/5; background: var(--noir3); position: relative; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .tissus-visual-pattern {
+      position: absolute; inset: 0; opacity: 0.07;
+      background-image: repeating-linear-gradient(45deg, var(--gold) 0px, var(--gold) 1px, transparent 1px, transparent 20px),
+                        repeating-linear-gradient(-45deg, var(--gold) 0px, var(--gold) 1px, transparent 1px, transparent 20px);
+    }
+    .tissus-visual-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 5rem; font-style: italic; font-weight: 300; color: var(--gold); opacity: 0.2; position: relative; z-index: 1;
+    }
+    .specs-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0.5px;
+      background: var(--border); margin-top: 2rem;
+    }
+    .spec-item { background: var(--noir2); padding: 1.2rem 1.5rem; }
+    .spec-label { font-size: 0.55rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.3rem; }
+    .spec-val { font-size: 0.8rem; color: rgba(249,245,239,0.7); }
+    .materials-bar {
+      display: flex; gap: 0; border-top: 0.5px solid var(--border); border-bottom: 0.5px solid var(--border);
+    }
+    .material-tag {
+      flex: 1; padding: 1.5rem; text-align: center;
+      border-right: 0.5px solid var(--border); transition: background var(--transition);
+    }
+    .material-tag:last-child { border-right: none; }
+    .material-tag:hover { background: var(--noir3); }
+    .material-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    .material-name { font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); }
+    @media (max-width: 768px) {
+      .tissus-hero { grid-template-columns: 1fr; padding: 8rem 1.5rem 3rem; }
+      .tissus-visual { display: none; }
+      .materials-bar { flex-wrap: wrap; }
+      .material-tag { flex: 1 1 50%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-loader" id="page-loader"><div class="loader-logo">SK'<span style="font-style:italic;color:var(--creme)">Luxury</span></div></div>
+  <nav class="nav-main" id="main-nav"></nav>
+  <div id="cart-overlay" class="cart-overlay"></div>
+  <aside id="cart-sidebar"></aside>
+  <div id="toast-container"></div>
+
+  <section class="tissus-hero">
+    <div>
+      <p class="section-eyebrow">Collection Tissus</p>
+      <h1 class="section-title" style="font-size:clamp(2.5rem,5vw,4.5rem);margin-bottom:2rem">
+        Étoffes du<br><em>monde entier</em>
+      </h1>
+      <p style="font-size:0.72rem;letter-spacing:0.06em;line-height:2.2;color:rgba(249,245,239,0.45);max-width:420px;margin-bottom:2.5rem">
+        Des soieries de Lyon aux linens belges certifiés, en passant par les brocarts orientaux — notre collection rassemble ce que le textile mondial produit d'exceptionnel pour les créateurs qui refusent le compromis.
+      </p>
+      <div class="specs-grid">
+        <div class="spec-item"><div class="spec-label">Origines</div><div class="spec-val">France, Belgique, Japon, Maroc</div></div>
+        <div class="spec-item"><div class="spec-label">Laize</div><div class="spec-val">110 à 150 cm selon tissu</div></div>
+        <div class="spec-item"><div class="spec-label">Vente</div><div class="spec-val">Au mètre, minimum 0,5 m</div></div>
+        <div class="spec-item"><div class="spec-label">Qualité</div><div class="spec-val">Sélection premium certifiée</div></div>
+      </div>
+    </div>
+    <div class="tissus-visual">
+      <div class="tissus-visual-pattern"></div>
+      <div class="tissus-visual-text">Soie</div>
+    </div>
+  </section>
+
+  <div class="materials-bar">
+    <div class="material-tag"><div class="material-icon">🥻</div><div class="material-name">Soies</div></div>
+    <div class="material-tag"><div class="material-icon">🌿</div><div class="material-name">Linens</div></div>
+    <div class="material-tag"><div class="material-icon">🧶</div><div class="material-name">Velours</div></div>
+    <div class="material-tag"><div class="material-icon">✨</div><div class="material-name">Brocarts</div></div>
+    <div class="material-tag"><div class="material-icon">🕊️</div><div class="material-name">Dentelles</div></div>
+  </div>
+
+  <div class="filter-bar" style="margin-top:0">
+    <div class="filter-tabs">
+      <button class="filter-tab active" data-tag="all">Tous les tissus</button>
+      <button class="filter-tab" data-tag="soie">Soies</button>
+      <button class="filter-tab" data-tag="lin">Lin</button>
+      <button class="filter-tab" data-tag="velours">Velours</button>
+      <button class="filter-tab" data-tag="brocart">Brocarts</button>
+    </div>
+    <div class="filter-right">
+      <select class="filter-sort" id="sort-select">
+        <option value="default">Par défaut</option>
+        <option value="price-asc">Prix croissant</option>
+        <option value="price-desc">Prix décroissant</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="product-grid" id="product-grid"></div>
+
+  <footer id="main-footer"></footer>
+
+  <script src="../js/database.js"></script>
+  <script src="../js/app.js"></script>
+  <script>
+    App.goToProduct = id => { window.location.href = `produit.html?id=${id}`; };
+
+    let currentTag = 'all';
+    let currentSort = 'default';
+
+    function getFiltered() {
+      let products = SKLUXURY_DB.getProductsByCategory('tissus');
+      if (currentTag !== 'all') products = products.filter(p => p.tags && p.tags.includes(currentTag));
+      if (currentSort === 'price-asc') products = [...products].sort((a,b) => a.price - b.price);
+      if (currentSort === 'price-desc') products = [...products].sort((a,b) => b.price - a.price);
+      return products;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('[data-tag]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          currentTag = btn.dataset.tag;
+          document.querySelectorAll('[data-tag]').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          App.renderProductGrid(getFiltered(), 'product-grid');
+        });
+      });
+      document.getElementById('sort-select').addEventListener('change', e => {
+        currentSort = e.target.value;
+        App.renderProductGrid(getFiltered(), 'product-grid');
+      });
+      App.renderProductGrid(getFiltered(), 'product-grid');
+    });
+  </script>
+</body>
+</html>

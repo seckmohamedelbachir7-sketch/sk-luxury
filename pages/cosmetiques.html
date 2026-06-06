@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cosmétiques — SK'Luxury</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <style>
+    .cosm-hero {
+      padding: 10rem 4rem 6rem;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center;
+    }
+    .cosm-certifs {
+      display: flex; gap: 1rem; margin-top: 2.5rem; flex-wrap: wrap;
+    }
+    .certif-badge {
+      border: 0.5px solid var(--border); padding: 0.6rem 1.2rem;
+      font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold);
+    }
+    .cosm-visual {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+    }
+    .cosm-visual-card {
+      aspect-ratio: 1; background: var(--noir3); display: flex; align-items: center;
+      justify-content: center; flex-direction: column; gap: 0.5rem;
+      border: 0.5px solid var(--border);
+    }
+    .cosm-visual-card .icon { font-size: 2rem; opacity: 0.4; }
+    .cosm-visual-card .label { font-size: 0.55rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); opacity: 0.6; }
+    .cosm-visual-card:first-child { grid-column: 1/-1; aspect-ratio: 2/1; }
+    .benefits-strip {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      border-top: 0.5px solid var(--border); border-bottom: 0.5px solid var(--border);
+    }
+    .benefit-item {
+      padding: 3rem 2rem; border-right: 0.5px solid var(--border);
+      text-align: center;
+    }
+    .benefit-item:last-child { border-right: none; }
+    .benefit-icon { font-size: 1.8rem; margin-bottom: 1rem; }
+    .benefit-title { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 300; margin-bottom: 0.5rem; }
+    .benefit-desc { font-size: 0.62rem; letter-spacing: 0.05em; color: rgba(249,245,239,0.35); line-height: 1.8; }
+    @media (max-width: 768px) {
+      .cosm-hero { grid-template-columns: 1fr; padding: 8rem 1.5rem 3rem; }
+      .cosm-visual { display: none; }
+      .benefits-strip { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-loader" id="page-loader"><div class="loader-logo">SK'<span style="font-style:italic;color:var(--creme)">Luxury</span></div></div>
+  <nav class="nav-main" id="main-nav"></nav>
+  <div id="cart-overlay" class="cart-overlay"></div>
+  <aside id="cart-sidebar"></aside>
+  <div id="toast-container"></div>
+
+  <section class="cosm-hero">
+    <div>
+      <p class="section-eyebrow">Collection Cosmétiques</p>
+      <h1 class="section-title" style="font-size:clamp(2.5rem,5vw,4.5rem);margin-bottom:2rem">
+        La science au<br>service de la <em>beauté</em>
+      </h1>
+      <p style="font-size:0.72rem;letter-spacing:0.06em;line-height:2.2;color:rgba(249,245,239,0.45);max-width:420px;margin-bottom:1.5rem">
+        Chaque formule est le fruit d'une recherche exigeante. Nos cosmétiques allient les actifs les plus rares — or 24 carats, rose de Damas, figue de Barbarie — à la rigueur des certifications biologiques internationales.
+      </p>
+      <div class="cosm-certifs">
+        <span class="certif-badge">Cosmos Organic</span>
+        <span class="certif-badge">Cosmos Natural</span>
+        <span class="certif-badge">Sans paraben</span>
+        <span class="certif-badge">Cruelty-free</span>
+      </div>
+    </div>
+    <div class="cosm-visual">
+      <div class="cosm-visual-card"><span class="icon">✨</span><span class="label">Sérums visage</span></div>
+      <div class="cosm-visual-card"><span class="icon">🌹</span><span class="label">Crèmes nuit</span></div>
+      <div class="cosm-visual-card"><span class="icon">💧</span><span class="label">Huiles précieuses</span></div>
+    </div>
+  </section>
+
+  <div class="benefits-strip">
+    <div class="benefit-item">
+      <div class="benefit-icon">🌿</div>
+      <div class="benefit-title">Bio certifié</div>
+      <div class="benefit-desc">Formules certifiées Cosmos Organic & Natural par Ecocert.</div>
+    </div>
+    <div class="benefit-item">
+      <div class="benefit-icon">🔬</div>
+      <div class="benefit-title">Actifs rares</div>
+      <div class="benefit-desc">Or 24K, Rose de Damas, Figue de Barbarie issus de sources éthiques.</div>
+    </div>
+    <div class="benefit-item">
+      <div class="benefit-icon">🧪</div>
+      <div class="benefit-title">Testé dermatologiquement</div>
+      <div class="benefit-desc">Chaque produit est testé sous contrôle dermatologique avant commercialisation.</div>
+    </div>
+    <div class="benefit-item">
+      <div class="benefit-icon">♻️</div>
+      <div class="benefit-title">Éco-responsable</div>
+      <div class="benefit-desc">Emballages recyclables ou en verre, formules biodégradables.</div>
+    </div>
+  </div>
+
+  <div class="filter-bar">
+    <div class="filter-tabs">
+      <button class="filter-tab active" data-tag="all">Tous les soins</button>
+      <button class="filter-tab" data-tag="sérum">Sérums</button>
+      <button class="filter-tab" data-tag="crème">Crèmes</button>
+      <button class="filter-tab" data-tag="huile">Huiles</button>
+      <button class="filter-tab" data-tag="masque">Masques</button>
+    </div>
+    <div class="filter-right">
+      <select class="filter-sort" id="sort-select">
+        <option value="default">Par défaut</option>
+        <option value="price-asc">Prix croissant</option>
+        <option value="price-desc">Prix décroissant</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="product-grid" id="product-grid"></div>
+
+  <footer id="main-footer"></footer>
+
+  <script src="../js/database.js"></script>
+  <script src="../js/app.js"></script>
+  <script>
+    App.goToProduct = id => { window.location.href = `produit.html?id=${id}`; };
+
+    let currentTag = 'all';
+    let currentSort = 'default';
+
+    function getFiltered() {
+      let products = SKLUXURY_DB.getProductsByCategory('cosmetiques');
+      if (currentTag !== 'all') products = products.filter(p => p.tags && p.tags.some(t => t.includes(currentTag)));
+      if (currentSort === 'price-asc') products = [...products].sort((a,b) => a.price - b.price);
+      if (currentSort === 'price-desc') products = [...products].sort((a,b) => b.price - a.price);
+      return products;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('[data-tag]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          currentTag = btn.dataset.tag;
+          document.querySelectorAll('[data-tag]').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          App.renderProductGrid(getFiltered(), 'product-grid');
+        });
+      });
+      document.getElementById('sort-select').addEventListener('change', e => {
+        currentSort = e.target.value;
+        App.renderProductGrid(getFiltered(), 'product-grid');
+      });
+      App.renderProductGrid(getFiltered(), 'product-grid');
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Produit — SK'Luxury</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <style>
+    .product-page { padding: 8rem 4rem 0; display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; min-height: 80vh; }
+    .product-gallery { position: relative; }
+    .product-main-img {
+      aspect-ratio: 3/4; background: var(--noir3); position: relative; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .product-thumbs { display: flex; gap: 0.75rem; margin-top: 1rem; }
+    .product-thumb {
+      width: 70px; height: 90px; background: var(--noir3); border: 0.5px solid transparent;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: border-color var(--transition);
+      font-size: 1.2rem; opacity: 0.5;
+    }
+    .product-thumb.active { border-color: var(--gold); opacity: 1; }
+    .product-info { padding-top: 1rem; }
+    .product-breadcrumb {
+      display: flex; gap: 0.5rem; align-items: center; margin-bottom: 2rem;
+      font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(249,245,239,0.3);
+    }
+    .product-breadcrumb a:hover { color: var(--gold); }
+    .product-breadcrumb span { color: rgba(249,245,239,0.15); }
+    .product-cat-label { font-size: 0.58rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
+    .product-title { font-family: 'Cormorant Garamond', serif; font-size: 2.8rem; font-weight: 300; line-height: 1.1; margin-bottom: 0.75rem; }
+    .product-short-desc { font-size: 0.72rem; letter-spacing: 0.05em; color: rgba(249,245,239,0.45); margin-bottom: 2rem; }
+    .product-price-row { display: flex; align-items: baseline; gap: 1rem; margin-bottom: 2.5rem; }
+    .product-price { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; color: var(--gold); }
+    .product-unit { font-size: 0.62rem; letter-spacing: 0.15em; color: var(--muted); }
+    .product-stock { font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: #6dbf6d; }
+    .product-stock.low { color: #e8a84a; }
+    .product-qty-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
+    .qty-label { font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(249,245,239,0.4); }
+    .qty-control { display: flex; align-items: center; border: 0.5px solid var(--border); }
+    .qty-control .qty-btn { width: 36px; height: 36px; font-size: 1rem; }
+    .qty-control .qty-val { padding: 0 1rem; font-size: 0.9rem; min-width: 50px; text-align: center; }
+    .product-add-btn { width: 100%; padding: 1.1rem; margin-bottom: 1rem; }
+    .product-wish { width: 100%; background: none; border: 0.5px solid var(--border); color: var(--creme); padding: 0.9rem; font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; transition: all var(--transition); }
+    .product-wish:hover { border-color: var(--gold); color: var(--gold); }
+    .product-divider { border: none; border-top: 0.5px solid var(--border); margin: 2rem 0; }
+    .product-desc { font-size: 0.72rem; letter-spacing: 0.04em; line-height: 2.2; color: rgba(249,245,239,0.5); margin-bottom: 2rem; }
+    .specs-accordion { border: 0.5px solid var(--border); }
+    .accordion-item { border-bottom: 0.5px solid var(--border); }
+    .accordion-item:last-child { border-bottom: none; }
+    .accordion-header {
+      width: 100%; background: none; border: none; color: var(--creme);
+      padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; cursor: pointer;
+      transition: background var(--transition);
+    }
+    .accordion-header:hover { background: var(--noir3); }
+    .accordion-arrow { transition: transform var(--transition); font-size: 0.8rem; color: var(--gold); }
+    .accordion-body { padding: 0 1.5rem; max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease; }
+    .accordion-body.open { max-height: 300px; padding: 1rem 1.5rem 1.5rem; }
+    .specs-table { width: 100%; border-collapse: collapse; }
+    .specs-table tr { border-bottom: 0.5px solid rgba(201,169,110,0.08); }
+    .specs-table tr:last-child { border-bottom: none; }
+    .specs-table td { padding: 0.6rem 0; font-size: 0.68rem; vertical-align: top; }
+    .specs-table td:first-child { color: rgba(249,245,239,0.35); letter-spacing: 0.08em; width: 40%; }
+    .related-section { padding: 6rem 4rem; border-top: 0.5px solid var(--border); margin-top: 6rem; }
+    @media (max-width: 768px) {
+      .product-page { grid-template-columns: 1fr; padding: 7rem 1.5rem 0; gap: 2rem; }
+      .product-title { font-size: 2rem; }
+      .related-section { padding: 4rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-loader" id="page-loader"><div class="loader-logo">SK'<span style="font-style:italic;color:var(--creme)">Luxury</span></div></div>
+  <nav class="nav-main" id="main-nav"></nav>
+  <div id="cart-overlay" class="cart-overlay"></div>
+  <aside id="cart-sidebar"></aside>
+  <div id="toast-container"></div>
+
+  <div id="product-page-content"></div>
+
+  <footer id="main-footer"></footer>
+
+  <script src="../js/database.js"></script>
+  <script src="../js/app.js"></script>
+  <script>
+    App.goToProduct = id => { window.location.href = `produit.html?id=${id}`; };
+
+    let qty = 1;
+
+    function renderProduct() {
+      const id = new URLSearchParams(window.location.search).get('id');
+      const p = id ? SKLUXURY_DB.getProductById(id) : null;
+
+      if (!p) {
+        document.getElementById('product-page-content').innerHTML = `
+          <div style="padding:12rem 4rem;text-align:center">
+            <p style="font-size:0.8rem;letter-spacing:0.1em;color:var(--muted);margin-bottom:2rem">Produit introuvable</p>
+            <a href="boutique.html" class="btn btn-gold">Retour à la boutique</a>
+          </div>`;
+        return;
+      }
+
+      document.title = `${p.name} — SK'Luxury`;
+      const icon = p.category === 'tissus' ? '🧵' : p.category === 'cosmetiques' ? '✨' : '💎';
+      const isLowStock = p.stock <= 10;
+      const catLink = p.category === 'tissus' ? 'tissus.html' : p.category === 'cosmetiques' ? 'cosmetiques.html' : 'boutique.html';
+      const catLabel = { tissus: 'Tissus', cosmetiques: 'Cosmétiques', accessoires: 'Accessoires', coffrets: 'Coffrets' }[p.category] || p.category;
+      const unitDisplay = (p.unit !== 'pièce' && p.unit !== 'coffret') ? `/ ${p.unit}` : '';
+
+      const specsRows = p.specs ? Object.entries(p.specs).map(([k,v]) => `<tr><td>${k.charAt(0).toUpperCase()+k.slice(1)}</td><td>${v}</td></tr>`).join('') : '';
+      const tagsHtml = p.tags ? p.tags.map(t => `<span style="font-size:0.58rem;letter-spacing:0.12em;border:0.5px solid var(--border);padding:0.3rem 0.8rem;color:rgba(249,245,239,0.4)">${t}</span>`).join('') : '';
+
+      const related = SKLUXURY_DB.getProductsByCategory(p.category).filter(x => x.id !== p.id).slice(0,4);
+
+      document.getElementById('product-page-content').innerHTML = `
+        <div class="product-page">
+          <div class="product-gallery">
+            <div class="product-main-img">
+              ${p.badge ? `<span class="product-badge">${p.badge}</span>` : ''}
+              <div class="img-placeholder"><span class="icon" style="font-size:4rem">${icon}</span><span class="label">${catLabel}</span></div>
+            </div>
+            <div class="product-thumbs">
+              <div class="product-thumb active">${icon}</div>
+              <div class="product-thumb">${icon}</div>
+              <div class="product-thumb">${icon}</div>
+            </div>
+          </div>
+
+          <div class="product-info">
+            <div class="product-breadcrumb">
+              <a href="boutique.html">Boutique</a><span>›</span>
+              <a href="${catLink}">${catLabel}</a><span>›</span>
+              <span style="color:rgba(249,245,239,0.6)">${p.name}</span>
+            </div>
+            <p class="product-cat-label">${catLabel}</p>
+            <h1 class="product-title">${p.name}</h1>
+            <p class="product-short-desc">${p.shortDesc}</p>
+            <div class="product-price-row">
+              <span class="product-price">${SKLUXURY_DB.formatPrice(p.price)}</span>
+              <span class="product-unit">${unitDisplay}</span>
+            </div>
+            <p class="product-stock ${isLowStock ? 'low' : ''}">
+              ${isLowStock ? `⚠ Stock limité — ${p.stock} disponibles` : `✓ En stock (${p.stock} disponibles)`}
+            </p>
+
+            <hr class="product-divider" />
+
+            <div class="product-qty-row">
+              <span class="qty-label">Quantité${unitDisplay ? ` (${p.unit})` : ''}</span>
+              <div class="qty-control">
+                <button class="qty-btn" onclick="changeQty(-1)">−</button>
+                <span class="qty-val" id="qty-display">1</span>
+                <button class="qty-btn" onclick="changeQty(1)">+</button>
+              </div>
+            </div>
+
+            <button class="btn btn-gold product-add-btn" onclick="App.addToCart('${p.id}', qty)">
+              Ajouter au panier — ${SKLUXURY_DB.formatPrice(p.price)} ${unitDisplay}
+            </button>
+            <button class="product-wish" onclick="App.toast('Ajouté à votre liste de souhaits','info')">♡ Ajouter aux favoris</button>
+
+            <hr class="product-divider" />
+
+            <p class="product-desc">${p.description}</p>
+
+            ${tagsHtml ? `<div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:2rem">${tagsHtml}</div>` : ''}
+
+            <div class="specs-accordion">
+              ${specsRows ? `
+              <div class="accordion-item">
+                <button class="accordion-header" onclick="toggleAccordion(this)">
+                  <span>Caractéristiques</span><span class="accordion-arrow">+</span>
+                </button>
+                <div class="accordion-body">
+                  <table class="specs-table"><tbody>${specsRows}</tbody></table>
+                </div>
+              </div>` : ''}
+              <div class="accordion-item">
+                <button class="accordion-header" onclick="toggleAccordion(this)">
+                  <span>Livraison & retours</span><span class="accordion-arrow">+</span>
+                </button>
+                <div class="accordion-body">
+                  <table class="specs-table"><tbody>
+                    <tr><td>Livraison standard</td><td>3–5 jours ouvrés</td></tr>
+                    <tr><td>Livraison express</td><td>24–48h (option au panier)</td></tr>
+                    <tr><td>Livraison offerte</td><td>Dès 120 € d'achat</td></tr>
+                    <tr><td>Retours</td><td>14 jours après réception</td></tr>
+                  </tbody></table>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <button class="accordion-header" onclick="toggleAccordion(this)">
+                  <span>Entretien & conseils</span><span class="accordion-arrow">+</span>
+                </button>
+                <div class="accordion-body">
+                  <p style="font-size:0.68rem;line-height:2;color:rgba(249,245,239,0.5)">
+                    Consultez les instructions d'entretien spécifiques à ce produit. Pour les tissus délicats, privilégiez le nettoyage à sec. Nos équipes sont disponibles pour tout conseil personnalisé.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        ${related.length > 0 ? `
+        <section class="related-section">
+          <p class="section-eyebrow">Dans la même collection</p>
+          <h2 class="section-title" style="margin-bottom:3rem">Vous pourriez <em>aimer</em></h2>
+          <div class="product-grid" id="related-grid" style="padding:0"></div>
+        </section>` : ''}
+      `;
+
+      if (related.length > 0) App.renderProductGrid(related, 'related-grid');
+    }
+
+    function changeQty(delta) {
+      qty = Math.max(1, qty + delta);
+      document.getElementById('qty-display').textContent = qty;
+    }
+
+    function toggleAccordion(btn) {
+      const body = btn.nextElementSibling;
+      const arrow = btn.querySelector('.accordion-arrow');
+      body.classList.toggle('open');
+      arrow.textContent = body.classList.contains('open') ? '−' : '+';
+    }
+
+    document.addEventListener('DOMContentLoaded', renderProduct);
+  </script>
+</body>
+</html>

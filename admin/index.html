@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — SK'Luxury</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <style>
+    body { background: var(--noir2); }
+    .admin-layout { display: flex; min-height: 100vh; }
+
+    /* Sidebar */
+    .admin-sidebar {
+      width: 240px; background: var(--noir); border-right: 0.5px solid var(--border);
+      padding: 2rem 0; position: fixed; top: 0; bottom: 0; left: 0; z-index: 100;
+      display: flex; flex-direction: column;
+    }
+    .admin-logo {
+      font-family: 'Cormorant Garamond', serif; font-size: 1.3rem;
+      letter-spacing: 0.3em; color: var(--gold); padding: 0 2rem 2rem;
+      border-bottom: 0.5px solid var(--border); margin-bottom: 1.5rem;
+    }
+    .admin-logo span { font-style: italic; color: var(--creme); }
+    .admin-logo small { display: block; font-size: 0.5rem; letter-spacing: 0.3em; color: var(--muted); margin-top: 0.25rem; font-family: 'Montserrat', sans-serif; }
+    .admin-nav { flex: 1; }
+    .admin-nav-item {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 0.85rem 2rem; font-size: 0.62rem; letter-spacing: 0.15em;
+      text-transform: uppercase; color: rgba(249,245,239,0.45);
+      cursor: pointer; transition: all var(--transition); border: none; background: none;
+      width: 100%; text-align: left;
+    }
+    .admin-nav-item:hover { color: var(--creme); background: rgba(201,169,110,0.05); }
+    .admin-nav-item.active { color: var(--gold); background: rgba(201,169,110,0.08); border-right: 2px solid var(--gold); }
+    .admin-nav-icon { width: 16px; text-align: center; font-size: 0.9rem; }
+    .admin-back { margin-top: auto; padding: 1.5rem 2rem 0; border-top: 0.5px solid var(--border); }
+    .admin-back a { font-size: 0.58rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(249,245,239,0.3); transition: color var(--transition); }
+    .admin-back a:hover { color: var(--gold); }
+
+    /* Main */
+    .admin-main { margin-left: 240px; flex: 1; min-height: 100vh; }
+    .admin-topbar {
+      padding: 1.5rem 3rem; border-bottom: 0.5px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--noir); position: sticky; top: 0; z-index: 50;
+    }
+    .admin-page-title { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 300; }
+    .admin-topbar-actions { display: flex; gap: 1rem; align-items: center; }
+    .admin-content { padding: 2.5rem 3rem; }
+
+    /* Tab panels */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* KPI cards */
+    .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); margin-bottom: 2.5rem; }
+    .kpi-card { background: var(--noir); padding: 2rem 1.5rem; }
+    .kpi-label { font-size: 0.55rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
+    .kpi-value { font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; font-weight: 300; color: var(--gold); line-height: 1; }
+    .kpi-sub { font-size: 0.6rem; letter-spacing: 0.05em; color: rgba(249,245,239,0.25); margin-top: 0.5rem; }
+
+    /* Tables */
+    .admin-table-wrap { background: var(--noir); border: 0.5px solid var(--border); overflow-x: auto; }
+    .admin-table { width: 100%; border-collapse: collapse; }
+    .admin-table th {
+      padding: 1rem 1.5rem; font-size: 0.55rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--gold); text-align: left;
+      border-bottom: 0.5px solid var(--border); font-weight: 400;
+    }
+    .admin-table td { padding: 1rem 1.5rem; font-size: 0.7rem; border-bottom: 0.5px solid rgba(201,169,110,0.06); vertical-align: middle; }
+    .admin-table tr:last-child td { border-bottom: none; }
+    .admin-table tr:hover td { background: rgba(201,169,110,0.03); }
+    .badge { display: inline-block; padding: 0.2rem 0.6rem; font-size: 0.55rem; letter-spacing: 0.1em; text-transform: uppercase; }
+    .badge-gold { background: rgba(201,169,110,0.15); color: var(--gold); }
+    .badge-green { background: rgba(100,180,100,0.12); color: #6dbf6d; }
+    .badge-red { background: rgba(200,80,80,0.12); color: #c87070; }
+    .badge-orange { background: rgba(232,168,74,0.12); color: #e8a84a; }
+
+    /* Section header */
+    .admin-section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    .admin-section-title { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 300; }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(13,13,13,0.85);
+      z-index: 1000; display: none; align-items: center; justify-content: center; padding: 2rem;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--noir); border: 0.5px solid var(--border);
+      width: 100%; max-width: 560px; max-height: 90vh; overflow-y: auto;
+    }
+    .modal-header {
+      padding: 1.5rem 2rem; border-bottom: 0.5px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .modal-title { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 300; }
+    .modal-close { background: none; border: none; color: var(--creme); font-size: 1.2rem; opacity: 0.5; cursor: pointer; }
+    .modal-close:hover { opacity: 1; }
+    .modal-body { padding: 2rem; }
+    .modal-footer { padding: 1.5rem 2rem; border-top: 0.5px solid var(--border); display: flex; gap: 1rem; justify-content: flex-end; }
+
+    /* Form */
+    .form-row { margin-bottom: 1.5rem; }
+    .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
+    .form-label { display: block; font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.5rem; }
+    .form-input, .form-select, .form-textarea {
+      width: 100%; background: var(--noir2); border: 0.5px solid var(--border);
+      color: var(--creme); padding: 0.75rem 1rem;
+      font-size: 0.72rem; letter-spacing: 0.04em; outline: none;
+      transition: border-color var(--transition);
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--gold); }
+    .form-input::placeholder, .form-textarea::placeholder { color: rgba(249,245,239,0.2); }
+    .form-textarea { resize: vertical; min-height: 80px; }
+    .form-select option { background: var(--noir2); }
+
+    /* Search bar */
+    .admin-search { background: var(--noir2); border: 0.5px solid var(--border); color: var(--creme); padding: 0.6rem 1rem; font-size: 0.65rem; outline: none; width: 220px; }
+    .admin-search:focus { border-color: var(--gold); }
+
+    @media (max-width: 900px) {
+      .admin-sidebar { display: none; }
+      .admin-main { margin-left: 0; }
+      .kpi-grid { grid-template-columns: 1fr 1fr; }
+      .admin-content { padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="admin-layout">
+
+  <!-- Sidebar -->
+  <aside class="admin-sidebar">
+    <div class="admin-logo">SK'<span>Luxury</span><small>Administration</small></div>
+    <nav class="admin-nav">
+      <button class="admin-nav-item active" onclick="showTab('dashboard',this)"><span class="admin-nav-icon">◈</span> Tableau de bord</button>
+      <button class="admin-nav-item" onclick="showTab('products',this)"><span class="admin-nav-icon">◻</span> Produits</button>
+      <button class="admin-nav-item" onclick="showTab('orders',this)"><span class="admin-nav-icon">◎</span> Commandes</button>
+      <button class="admin-nav-item" onclick="showTab('settings',this)"><span class="admin-nav-icon">◇</span> Paramètres</button>
+    </nav>
+    <div class="admin-back"><a href="../index.html">← Retour au site</a></div>
+  </aside>
+
+  <!-- Main -->
+  <main class="admin-main">
+    <div class="admin-topbar">
+      <h1 class="admin-page-title" id="page-title">Tableau de bord</h1>
+      <div class="admin-topbar-actions">
+        <span id="topbar-date" style="font-size:0.6rem;letter-spacing:0.1em;color:var(--muted)"></span>
+      </div>
+    </div>
+
+    <div class="admin-content">
+
+      <!-- Dashboard tab -->
+      <div class="tab-panel active" id="tab-dashboard">
+        <div class="kpi-grid" id="kpi-grid"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem">
+          <div>
+            <div class="admin-section-header"><h2 class="admin-section-title">Dernières commandes</h2></div>
+            <div class="admin-table-wrap" id="recent-orders-table"></div>
+          </div>
+          <div>
+            <div class="admin-section-header"><h2 class="admin-section-title">Stock faible</h2></div>
+            <div class="admin-table-wrap" id="low-stock-table"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Products tab -->
+      <div class="tab-panel" id="tab-products">
+        <div class="admin-section-header">
+          <div style="display:flex;gap:1rem;align-items:center">
+            <input class="admin-search" id="product-search" placeholder="Rechercher un produit…" oninput="renderProductsTable()" />
+            <select class="form-select" id="product-cat-filter" style="width:auto;padding:0.6rem 1rem;font-size:0.62rem" onchange="renderProductsTable()">
+              <option value="">Toutes catégories</option>
+              <option value="tissus">Tissus</option>
+              <option value="cosmetiques">Cosmétiques</option>
+              <option value="accessoires">Accessoires</option>
+              <option value="coffrets">Coffrets</option>
+            </select>
+          </div>
+          <button class="btn btn-gold btn-sm" onclick="openProductModal()">+ Nouveau produit</button>
+        </div>
+        <div class="admin-table-wrap" id="products-table"></div>
+      </div>
+
+      <!-- Orders tab -->
+      <div class="tab-panel" id="tab-orders">
+        <div class="admin-section-header">
+          <h2 class="admin-section-title">Toutes les commandes</h2>
+          <button class="btn btn-danger btn-sm" onclick="clearOrders()">Vider les commandes</button>
+        </div>
+        <div class="admin-table-wrap" id="orders-table"></div>
+      </div>
+
+      <!-- Settings tab -->
+      <div class="tab-panel" id="tab-settings">
+        <div style="max-width:560px">
+          <div class="admin-section-header"><h2 class="admin-section-title">Configuration générale</h2></div>
+          <div style="background:var(--noir);border:0.5px solid var(--border);padding:2rem">
+            <div class="form-row">
+              <label class="form-label">Seuil livraison gratuite (€)</label>
+              <input class="form-input" id="cfg-shipping" type="number" />
+            </div>
+            <div class="form-row-2">
+              <div><label class="form-label">Email</label><input class="form-input" id="cfg-email" type="email" /></div>
+              <div><label class="form-label">Téléphone</label><input class="form-input" id="cfg-phone" /></div>
+            </div>
+            <div class="form-row">
+              <label class="form-label">Adresse</label>
+              <input class="form-input" id="cfg-address" />
+            </div>
+            <div class="form-row">
+              <label class="form-label">Instagram</label>
+              <input class="form-input" id="cfg-instagram" />
+            </div>
+            <div class="form-row">
+              <label class="form-label">Tagline</label>
+              <input class="form-input" id="cfg-tagline" />
+            </div>
+            <button class="btn btn-gold" onclick="saveSettings()">Enregistrer</button>
+          </div>
+
+          <div class="admin-section-header" style="margin-top:2rem"><h2 class="admin-section-title">Données & réinitialisation</h2></div>
+          <div style="background:var(--noir);border:0.5px solid var(--border);padding:2rem;display:flex;flex-direction:column;gap:1rem">
+            <button class="btn btn-danger btn-sm" style="width:fit-content" onclick="resetProducts()">Réinitialiser le catalogue produits</button>
+            <p style="font-size:0.62rem;letter-spacing:0.04em;color:var(--muted)">Supprime toutes les modifications produits et restaure le catalogue d'origine.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- Product Modal -->
+<div class="modal-overlay" id="product-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 class="modal-title" id="modal-title">Nouveau produit</h3>
+      <button class="modal-close" onclick="closeProductModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="modal-product-id" />
+      <div class="form-row-2">
+        <div><label class="form-label">Nom *</label><input class="form-input" id="f-name" placeholder="Nom du produit" /></div>
+        <div>
+          <label class="form-label">Catégorie *</label>
+          <select class="form-select" id="f-category">
+            <option value="tissus">Tissus</option>
+            <option value="cosmetiques">Cosmétiques</option>
+            <option value="accessoires">Accessoires</option>
+            <option value="coffrets">Coffrets</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <label class="form-label">Description courte</label>
+        <input class="form-input" id="f-shortdesc" placeholder="Résumé en une ligne" />
+      </div>
+      <div class="form-row">
+        <label class="form-label">Description complète</label>
+        <textarea class="form-textarea" id="f-desc" placeholder="Description détaillée…"></textarea>
+      </div>
+      <div class="form-row-2">
+        <div><label class="form-label">Prix (€) *</label><input class="form-input" id="f-price" type="number" step="0.01" placeholder="0.00" /></div>
+        <div>
+          <label class="form-label">Unité</label>
+          <select class="form-select" id="f-unit">
+            <option value="pièce">Pièce</option>
+            <option value="m">Mètre (m)</option>
+            <option value="coffret">Coffret</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row-2">
+        <div><label class="form-label">Stock</label><input class="form-input" id="f-stock" type="number" placeholder="0" /></div>
+        <div><label class="form-label">Badge (ex: Nouveau)</label><input class="form-input" id="f-badge" placeholder="Laisser vide si aucun" /></div>
+      </div>
+      <div class="form-row-2">
+        <div>
+          <label class="form-label" style="display:flex;align-items:center;gap:0.5rem;cursor:pointer">
+            <input type="checkbox" id="f-featured" style="accent-color:var(--gold)" /> Produit vedette
+          </label>
+        </div>
+        <div><label class="form-label">Tags (virgule séparés)</label><input class="form-input" id="f-tags" placeholder="soie, luxe, paris" /></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline btn-sm" onclick="closeProductModal()">Annuler</button>
+      <button class="btn btn-gold btn-sm" onclick="saveProduct()">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+
+<script src="../js/database.js"></script>
+<script src="../js/app.js"></script>
+<script>
+  // Fix App for admin context
+  App.renderNav = () => {};
+  App.renderFooter = () => {};
+  App.renderCartSidebar = () => {};
+  App.initScrollBehavior = () => {};
+  App.hideLoader = () => {};
+
+  const titles = { dashboard:'Tableau de bord', products:'Produits', orders:'Commandes', settings:'Paramètres' };
+
+  function showTab(name, btn) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.admin-nav-item').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    btn.classList.add('active');
+    document.getElementById('page-title').textContent = titles[name];
+    if (name === 'dashboard') renderDashboard();
+    if (name === 'products') renderProductsTable();
+    if (name === 'orders') renderOrdersTable();
+    if (name === 'settings') loadSettings();
+  }
+
+  // ---- Dashboard ----
+  function renderDashboard() {
+    const orders = SKLUXURY_DB.getOrders();
+    const products = SKLUXURY_DB.products;
+    const totalRevenue = orders.reduce((s,o) => s + o.total, 0);
+    const lowStock = products.filter(p => p.stock <= 10);
+
+    document.getElementById('kpi-grid').innerHTML = `
+      <div class="kpi-card"><div class="kpi-label">Chiffre d'affaires</div><div class="kpi-value">${SKLUXURY_DB.formatPrice(totalRevenue)}</div><div class="kpi-sub">${orders.length} commande${orders.length!==1?'s':''} au total</div></div>
+      <div class="kpi-card"><div class="kpi-label">Produits</div><div class="kpi-value">${products.length}</div><div class="kpi-sub">${lowStock.length} en stock faible</div></div>
+      <div class="kpi-card"><div class="kpi-label">Commandes</div><div class="kpi-value">${orders.length}</div><div class="kpi-sub">Depuis le début</div></div>
+      <div class="kpi-card"><div class="kpi-label">Panier moyen</div><div class="kpi-value">${orders.length ? SKLUXURY_DB.formatPrice(totalRevenue/orders.length) : '—'}</div><div class="kpi-sub">Par commande</div></div>
+    `;
+
+    const recentOrders = orders.slice(0,5);
+    document.getElementById('recent-orders-table').innerHTML = recentOrders.length ? `
+      <table class="admin-table">
+        <thead><tr><th>Réf.</th><th>Total</th><th>Statut</th></tr></thead>
+        <tbody>${recentOrders.map(o => `
+          <tr>
+            <td style="color:var(--gold);font-size:0.65rem">${o.id}</td>
+            <td>${SKLUXURY_DB.formatPrice(o.total)}</td>
+            <td><span class="badge badge-gold">${o.status}</span></td>
+          </tr>`).join('')}</tbody>
+      </table>` : `<p style="padding:2rem;font-size:0.7rem;opacity:0.3;text-align:center">Aucune commande</p>`;
+
+    document.getElementById('low-stock-table').innerHTML = lowStock.length ? `
+      <table class="admin-table">
+        <thead><tr><th>Produit</th><th>Stock</th></tr></thead>
+        <tbody>${lowStock.map(p => `
+          <tr>
+            <td>${p.name}</td>
+            <td><span class="badge ${p.stock <= 3 ? 'badge-red' : 'badge-orange'}">${p.stock}</span></td>
+          </tr>`).join('')}</tbody>
+      </table>` : `<p style="padding:2rem;font-size:0.7rem;opacity:0.3;text-align:center">Tout est bien approvisionné ✓</p>`;
+  }
+
+  // ---- Products ----
+  function renderProductsTable() {
+    const search = (document.getElementById('product-search')?.value || '').toLowerCase();
+    const cat = document.getElementById('product-cat-filter')?.value || '';
+    let products = SKLUXURY_DB.products;
+    if (cat) products = products.filter(p => p.category === cat);
+    if (search) products = products.filter(p => p.name.toLowerCase().includes(search) || p.id.toLowerCase().includes(search));
+
+    document.getElementById('products-table').innerHTML = `
+      <table class="admin-table">
+        <thead><tr><th>ID</th><th>Nom</th><th>Catégorie</th><th>Prix</th><th>Stock</th><th>Vedette</th><th>Actions</th></tr></thead>
+        <tbody>${products.map(p => `
+          <tr>
+            <td style="color:var(--muted);font-size:0.62rem">${p.id}</td>
+            <td>
+              <div style="font-size:0.72rem">${p.name}</div>
+              ${p.badge ? `<span class="badge badge-gold" style="margin-top:0.25rem">${p.badge}</span>` : ''}
+            </td>
+            <td><span class="badge badge-gold">${p.category}</span></td>
+            <td style="font-family:'Cormorant Garamond',serif;color:var(--gold)">${SKLUXURY_DB.formatPrice(p.price)}</td>
+            <td><span class="badge ${p.stock <= 3 ? 'badge-red' : p.stock <= 10 ? 'badge-orange' : 'badge-green'}">${p.stock}</span></td>
+            <td style="text-align:center">${p.featured ? '★' : '—'}</td>
+            <td>
+              <div style="display:flex;gap:0.5rem">
+                <button class="btn btn-gold-outline btn-sm" onclick="editProduct('${p.id}')">Modifier</button>
+                <button class="btn btn-danger btn-sm" onclick="deleteProduct('${p.id}')">✕</button>
+              </div>
+            </td>
+          </tr>`).join('')}
+        </tbody>
+      </table>`;
+  }
+
+  function openProductModal(product) {
+    document.getElementById('modal-title').textContent = product ? 'Modifier le produit' : 'Nouveau produit';
+    document.getElementById('modal-product-id').value = product?.id || '';
+    document.getElementById('f-name').value = product?.name || '';
+    document.getElementById('f-category').value = product?.category || 'tissus';
+    document.getElementById('f-shortdesc').value = product?.shortDesc || '';
+    document.getElementById('f-desc').value = product?.description || '';
+    document.getElementById('f-price').value = product?.price || '';
+    document.getElementById('f-unit').value = product?.unit || 'pièce';
+    document.getElementById('f-stock').value = product?.stock || 0;
+    document.getElementById('f-badge').value = product?.badge || '';
+    document.getElementById('f-featured').checked = product?.featured || false;
+    document.getElementById('f-tags').value = product?.tags?.join(', ') || '';
+    document.getElementById('product-modal').classList.add('open');
+  }
+
+  function closeProductModal() {
+    document.getElementById('product-modal').classList.remove('open');
+  }
+
+  function editProduct(id) {
+    const p = SKLUXURY_DB.getProductById(id);
+    if (p) openProductModal(p);
+  }
+
+  function saveProduct() {
+    const id = document.getElementById('modal-product-id').value;
+    const name = document.getElementById('f-name').value.trim();
+    const price = parseFloat(document.getElementById('f-price').value);
+    if (!name || isNaN(price)) { App.toast('Nom et prix requis', 'error'); return; }
+
+    const data = {
+      name, price,
+      category: document.getElementById('f-category').value,
+      shortDesc: document.getElementById('f-shortdesc').value,
+      description: document.getElementById('f-desc').value,
+      unit: document.getElementById('f-unit').value,
+      stock: parseInt(document.getElementById('f-stock').value) || 0,
+      badge: document.getElementById('f-badge').value || null,
+      featured: document.getElementById('f-featured').checked,
+      tags: document.getElementById('f-tags').value.split(',').map(t => t.trim()).filter(Boolean),
+      images: []
+    };
+
+    if (id) {
+      SKLUXURY_DB.updateProduct(id, data);
+      App.toast('Produit mis à jour', 'success');
+    } else {
+      SKLUXURY_DB.addProduct(data);
+      App.toast('Produit ajouté', 'success');
+    }
+
+    closeProductModal();
+    renderProductsTable();
+  }
+
+  function deleteProduct(id) {
+    if (!confirm('Supprimer ce produit définitivement ?')) return;
+    SKLUXURY_DB.deleteProduct(id);
+    App.toast('Produit supprimé', 'success');
+    renderProductsTable();
+  }
+
+  // ---- Orders ----
+  function renderOrdersTable() {
+    const orders = SKLUXURY_DB.getOrders();
+    document.getElementById('orders-table').innerHTML = orders.length ? `
+      <table class="admin-table">
+        <thead><tr><th>Référence</th><th>Date</th><th>Articles</th><th>Total</th><th>Statut</th></tr></thead>
+        <tbody>${orders.map(o => `
+          <tr>
+            <td style="color:var(--gold);font-size:0.65rem;font-family:'Cormorant Garamond',serif">${o.id}</td>
+            <td style="font-size:0.65rem;color:var(--muted)">${new Date(o.date).toLocaleDateString('fr-FR',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})}</td>
+            <td style="font-size:0.65rem">${o.items.map(i => `${i.name} ×${i.qty}`).join(', ')}</td>
+            <td style="font-family:'Cormorant Garamond',serif;color:var(--gold)">${SKLUXURY_DB.formatPrice(o.total)}</td>
+            <td>
+              <select class="form-select" style="padding:0.3rem 0.6rem;font-size:0.6rem;width:auto" onchange="updateOrderStatus('${o.id}',this.value)">
+                ${['En attente','En préparation','Expédiée','Livrée','Annulée'].map(s => `<option ${s===o.status?'selected':''}>${s}</option>`).join('')}
+              </select>
+            </td>
+          </tr>`).join('')}
+        </tbody>
+      </table>` : `<p style="padding:2rem;font-size:0.7rem;opacity:0.3;text-align:center">Aucune commande enregistrée</p>`;
+  }
+
+  function updateOrderStatus(id, status) {
+    const orders = SKLUXURY_DB.getOrders();
+    const o = orders.find(x => x.id === id);
+    if (o) { o.status = status; localStorage.setItem('skluxury_orders', JSON.stringify(orders)); App.toast('Statut mis à jour', 'success'); }
+  }
+
+  function clearOrders() {
+    if (!confirm('Supprimer toutes les commandes ?')) return;
+    localStorage.removeItem('skluxury_orders');
+    App.toast('Commandes supprimées', 'success');
+    renderOrdersTable();
+  }
+
+  // ---- Settings ----
+  function loadSettings() {
+    const c = SKLUXURY_DB.config;
+    document.getElementById('cfg-shipping').value = c.freeShippingThreshold;
+    document.getElementById('cfg-email').value = c.email;
+    document.getElementById('cfg-phone').value = c.phone;
+    document.getElementById('cfg-address').value = c.address;
+    document.getElementById('cfg-instagram').value = c.instagram;
+    document.getElementById('cfg-tagline').value = c.tagline;
+  }
+
+  function saveSettings() {
+    SKLUXURY_DB.config.freeShippingThreshold = parseFloat(document.getElementById('cfg-shipping').value) || 120;
+    SKLUXURY_DB.config.email = document.getElementById('cfg-email').value;
+    SKLUXURY_DB.config.phone = document.getElementById('cfg-phone').value;
+    SKLUXURY_DB.config.address = document.getElementById('cfg-address').value;
+    SKLUXURY_DB.config.instagram = document.getElementById('cfg-instagram').value;
+    SKLUXURY_DB.config.tagline = document.getElementById('cfg-tagline').value;
+    App.toast('Paramètres enregistrés', 'success');
+  }
+
+  function resetProducts() {
+    if (!confirm('Réinitialiser le catalogue ? Toutes les modifications seront perdues.')) return;
+    localStorage.removeItem('skluxury_products_override');
+    location.reload();
+  }
+
+  // Init
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('topbar-date').textContent = new Date().toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+    renderDashboard();
+  });
+</script>
+</body>
+</html>
